@@ -1,5 +1,7 @@
 require 'pry'
 class Checkout
+  attr_reader :pricing_rules
+
   ITEMS = {
             CH1: '$3.11',
             AP1: '$6.00',
@@ -7,9 +9,35 @@ class Checkout
             MK1: '$4.75'
           }
 
-  def initialize
+  def initialize(*pricing_rules)
     @all_items = []
     @current_total = []
+    @pricing_rules = pricing_rules
+  end
+
+  def check_rules(sum)
+    if @pricing_rules.include?('BOGO')
+      number_coffees = (@all_items.count('CF1')) / 2
+      sum - (monetize(ITEMS[:CF1]) * number_coffees )
+    elsif @pricing_rules.include?('APPL')
+      number_apples = @all_items.count('AP1')
+      if number_apples >= 3
+        current_cost_apples = monetize(ITEMS[:AP1])
+        cost_deducted = current_cost_apples - 4.5
+        sum - (cost_deducted * number_apples)
+      else
+        sum
+      end
+    elsif @pricing_rules.include?('CHMK')
+      number_chai = @all_items.count('CH1')
+      number_milk = @all_items.count('MK1')
+      if number_milk >=1 && number_chai >=1
+        milk_cost = monetize(ITEMS[:MK1])
+        sum - (milk_cost)
+      else
+        sum
+      end
+    end
   end
 
   def scan(item)
@@ -25,7 +53,10 @@ class Checkout
 
   def total
     list_out_items
-    sum = @current_total.inject(:+)
+    sum = @current_total.inject(:+).round(2)
+    if @pricing_rules.any?
+      sum = (check_rules(sum)).round(2)
+    end
     format_money(sum)
   end
 
