@@ -3,7 +3,9 @@ require 'pry'
 require_relative '../lib/market'
 
 describe Checkout do
+  # let(:checkout) { Checkout.new }
   # it 'should receive a list of product rules' do
+
   # end
 
   context 'scanning products' do
@@ -26,5 +28,22 @@ describe Checkout do
 
   end
 
+  context 'totaling products sold' do
+    let(:checkout) { Checkout.new }
+
+    it 'should keep track of the running total' do
+      checkout.scan('MK1')
+      checkout.scan('AP1')
+      expect(checkout.total).to eq ('$10.75')
+    end
+
+    # it 'should keep track of the running total' do
+    #   checkout.scan('CH1')
+    #   checkout.scan('AP1')
+    #   checkout.scan('CF1')
+    #   checkout.scan('MK1')
+    #   expect(checkout.total).to eq ('$20.34')
+    # end
+  end
 
 end
