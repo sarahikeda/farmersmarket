@@ -11,35 +11,14 @@ class Checkout
 
   def initialize(*pricing_rules)
     @all_items = []
-    @current_total = []
     @pricing_rules = pricing_rules
   end
 
-  def apply_rules
-    @pricing_rules.each do |rule|
-      if rule == 'BOGO'
-        number_coffees = (@all_items.count('CF1')) / 2
-        @sum = @sum - (monetize(ITEMS[:CF1]) * number_coffees )
-      elsif rule == 'APPL'
-        number_apples = @all_items.count('AP1')
-        if number_apples >= 3
-          current_cost_apples = monetize(ITEMS[:AP1])
-          cost_deducted = current_cost_apples - 4.5
-          @sum = @sum - (cost_deducted * number_apples)
-        else
-          @sum
-        end
-      elsif rule == 'CHMK'
-        number_chai = @all_items.count('CH1')
-        number_milk = @all_items.count('MK1')
-        if number_milk >=1 && number_chai >=1
-          milk_cost = monetize(ITEMS[:MK1])
-          @sum = @sum - (milk_cost)
-        else
-          @sum
-        end
-      end
-    end
+  def total
+    list_out_items
+    add_item_prices
+    apply_rules if @pricing_rules.any?
+    format_money_to_string(@current_total)
   end
 
   def scan(item)
@@ -48,19 +27,19 @@ class Checkout
   end
 
   def list_out_items
-    @current_total = @all_items.map do |item|
-      monetize(ITEMS[item.to_sym])
-    end
+    @listed_prices = @all_items.map { |item| monetize(ITEMS[item.to_sym]) }
   end
 
-  def total
-    list_out_items
-    @sum = @current_total.inject(:+).round(2)
-    if @pricing_rules.any?
-      apply_rules
-      @sum = @sum.round(2)
+  def apply_rules
+    @pricing_rules.each do |rule|
+      if rule == 'BOGO'
+        calculate_coffee
+      elsif rule == 'APPL'
+        calculate_apples
+      elsif rule == 'CHMK'
+        calculate_chai
+      end
     end
-    format_money(@sum)
   end
 
   private
@@ -68,7 +47,37 @@ class Checkout
     item.tr('$','').to_f
   end
 
-  def format_money(item)
-    "$#{item}"
+  def format_money_to_string(current_total)
+    rounded_price = current_total.round(2)
+    "$#{rounded_price}"
   end
+
+  def add_item_prices
+    @current_total = @listed_prices.inject(:+)
+  end
+
+  def calculate_coffee
+    number_coffees = (@all_items.count('CF1')) / 2
+    current_cost_coffee = monetize(ITEMS[:CF1])
+    @current_total = @current_total - (current_cost_coffee * number_coffees)
+  end
+
+  def calculate_apples
+    number_apples = @all_items.count('AP1')
+    if number_apples >= 3
+      current_cost_apples = monetize(ITEMS[:AP1])
+      cost_deducted = current_cost_apples - 4.5
+      @current_total = @current_total - (cost_deducted * number_apples)
+    end
+  end
+
+  def calculate_chai
+    number_chai = @all_items.count('CH1')
+    number_milk = @all_items.count('MK1')
+    if number_milk >=1 && number_chai >=1
+      milk_cost = monetize(ITEMS[:MK1])
+      @current_total = @current_total - milk_cost
+    end
+  end
+
 end
