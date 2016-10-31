@@ -2,12 +2,13 @@
 
 Short exercise to create a checkout system for a farmer's market vendor.
 
-# Installation
+## Installation
 Uses Ruby 2.2.3
-1. Git clone project
-2. Run `bundle install`
+ Steps:
+ 1. Git clone project
+ 2. Run `bundle install`
 
-# Prices
+## Prices
 ```
 +--------------|--------------|---------+
 | Product Code |     Name     |  Price  |
@@ -19,7 +20,7 @@ Uses Ruby 2.2.3
 +--------------|--------------|---------+
 ```
 
-# Pricing Rules:
+## Pricing Rules:
 ```
 BOGO -- Buy-One-Get-One-Free Special on Coffee. (Unlimited)
 APPL -- If you buy 3 or more bags of Apples, the price drops to $4.50.
@@ -27,9 +28,9 @@ CHMK -- Purchase a box of Chai and get milk free. (Limit 1)
 The checkout system can apply any or all of these rules.
 ```
 
-# Usage
+## Usage
 A user should be able to scan individual items and calculate the total cost at any time.
 
-# Testing
+## Testing
 
 Tests are written in RSpec and can be run using `bundle exec rspec`. To run an individual test from the command line, run `bundle exec rspec:LINE NUMBER OF TEST`
