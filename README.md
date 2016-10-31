@@ -4,11 +4,7 @@ Short exercise to create a checkout system for a farmer's market vendor.
 
 # Installation
 Uses Ruby 2.2.3
-```
-Steps:
-```
 1. Git clone project
-```
 2. Run `bundle install`
 
 # Prices
