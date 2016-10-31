@@ -30,6 +30,13 @@ The checkout system can apply any or all of these rules.
 
 ## Usage
 A user should be able to scan individual items and calculate the total cost at any time.
+Example:
+```
+checkout = Checkout.new('APPL')
+checkout.scan('CF1')
+checkout.scan('AP1')
+checkout.total
+```
 
 ## Testing
 
