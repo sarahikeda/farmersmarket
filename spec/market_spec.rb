@@ -4,19 +4,22 @@ require_relative '../lib/market'
 
 describe Checkout do
   let(:checkout) { Checkout.new }
-  let(:checkout_with_rule) { Checkout.new('BOGO')}
+  let(:checkout_with_coffee_rule) { Checkout.new('BOGO')}
   let(:checkout_with_rules) { Checkout.new('BOGO', 'APPL')}
 
-  it 'should allow checkout systems without pricing rules' do
-    expect(checkout.pricing_rules).to eq []
-  end
+  context 'initial set up of checkout system' do
+    it 'should allow checkout systems without pricing rules' do
+      expect(checkout.pricing_rules).to eq []
+    end
 
-  it 'should allow checkout systems with a pricing rule' do
-    expect(checkout_with_rule.pricing_rules).to eq(['BOGO'])
-  end
+    it 'should allow checkout systems with a pricing rule' do
+      expect(checkout_with_coffee_rule.pricing_rules).to eq(['BOGO'])
+    end
 
-  it 'should allow checkout systems with multiple pricing rules' do
-    expect(checkout_with_rules.pricing_rules).to eq(['BOGO', 'APPL'])
+    it 'should allow checkout systems with multiple pricing rules' do
+      expect(checkout_with_rules.pricing_rules).to eq(['BOGO', 'APPL'])
+    end
+
   end
 
   context 'scanning products' do
@@ -45,9 +48,9 @@ describe Checkout do
 
     it 'should appropriately calculate buy one get one free coffee' do
       2.times do
-        checkout_with_rule.scan('CF1')
+        checkout_with_coffee_rule.scan('CF1')
       end
-      expect(checkout_with_rule.total).to eq("$11.23")
+      expect(checkout_with_coffee_rule.total).to eq("$11.23")
     end
 
     it 'should appropriately calculate buying 2 apple bags' do
@@ -100,6 +103,7 @@ describe Checkout do
 
   context 'totaling products sold' do
     let(:checkout) { Checkout.new }
+    let(:checkout_with_chai_rule) { Checkout.new('CHMK')}
 
     it 'should keep track of the running total' do
       checkout.scan('MK1')
@@ -107,13 +111,21 @@ describe Checkout do
       expect(checkout.total).to eq ('$10.75')
     end
 
-    # it 'should keep track of the running total' do
-    #   checkout.scan('CH1')
-    #   checkout.scan('AP1')
-    #   checkout.scan('CF1')
-    #   checkout.scan('MK1')
-    #   expect(checkout.total).to eq ('$20.34')
-    # end
+    it 'should keep track of the running total' do
+      checkout_with_chai_rule.scan('CH1')
+      checkout_with_chai_rule.scan('AP1')
+      checkout_with_chai_rule.scan('CF1')
+      checkout_with_chai_rule.scan('MK1')
+      expect(checkout_with_chai_rule.total).to eq ('$20.34')
+    end
+
+    it 'should take into account multiple rules' do
+      3.times do
+        checkout_with_rules.scan('AP1')
+      end
+      checkout_with_rules.scan('CH1')
+      expect(checkout_with_rules.total).to eq('$16.61')
+    end
   end
 
 end
