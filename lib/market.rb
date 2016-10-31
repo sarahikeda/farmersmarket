@@ -57,24 +57,24 @@ class Checkout
   end
 
   def calculate_coffee
-    number_coffees = (@all_items.count('CF1')) / 2
+    number_of_coffees = (@all_items.count('CF1')) / 2
     current_cost_coffee = monetize(ITEMS[:CF1])
-    @current_total = @current_total - (current_cost_coffee * number_coffees)
+    @current_total = @current_total - (current_cost_coffee * number_of_coffees)
   end
 
   def calculate_apples
-    number_apples = @all_items.count('AP1')
-    if number_apples >= 3
+    number_of_apples = @all_items.count('AP1')
+    if number_of_apples >= 3
       current_cost_apples = monetize(ITEMS[:AP1])
       cost_deducted = current_cost_apples - 4.5
-      @current_total = @current_total - (cost_deducted * number_apples)
+      @current_total = @current_total - (cost_deducted * number_of_apples)
     end
   end
 
   def calculate_chai
-    number_chai = @all_items.count('CH1')
-    number_milk = @all_items.count('MK1')
-    if number_milk >=1 && number_chai >=1
+    number_of_chais = @all_items.count('CH1')
+    number_of_milks = @all_items.count('MK1')
+    if number_of_milks >=1 && number_of_chais >=1
       milk_cost = monetize(ITEMS[:MK1])
       @current_total = @current_total - milk_cost
     end
