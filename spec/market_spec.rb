@@ -23,7 +23,6 @@ describe Checkout do
   end
 
   context 'scanning products' do
-    let(:checkout) { Checkout.new }
     it 'should return one chai with a value of $3.11' do
       expect(checkout.scan('CH1')).to eq ('$3.11')
     end
@@ -102,9 +101,7 @@ describe Checkout do
   end
 
   context 'totaling products sold' do
-    let(:checkout) { Checkout.new }
     let(:checkout_with_chai_rule) { Checkout.new('CHMK')}
-
     it 'should keep track of the running total' do
       checkout.scan('MK1')
       checkout.scan('AP1')
