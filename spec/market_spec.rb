@@ -4,23 +4,8 @@ require_relative '../lib/market'
 
 describe Checkout do
   let(:checkout) { Checkout.new }
-  let(:checkout_with_coffee_rule) { Checkout.new('BOGO')}
+  let!(:checkout_with_coffee_rule) { Checkout.new('BOGO')}
   let(:checkout_with_rules) { Checkout.new('BOGO', 'APPL')}
-
-  context 'initial set up of checkout system' do
-    it 'should allow checkout systems without pricing rules' do
-      expect(checkout.pricing_rules).to eq []
-    end
-
-    it 'should allow checkout systems with a pricing rule' do
-      expect(checkout_with_coffee_rule.pricing_rules).to eq(['BOGO'])
-    end
-
-    it 'should allow checkout systems with multiple pricing rules' do
-      expect(checkout_with_rules.pricing_rules).to eq(['BOGO', 'APPL'])
-    end
-
-  end
 
   context 'scanning products' do
     it 'should return one chai with a value of $3.11' do
